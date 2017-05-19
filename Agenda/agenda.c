@@ -1,3 +1,5 @@
+//Alana Schwendler - M1
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,7 +46,7 @@ int main() {
 	
 	do {
 		printf("Opção: ");
-		scanf("%d", opcao); //le qual oção o usuario vai querer
+		scanf("%d", opcao); //le qual opção o usuario vai querer
 
 		if(*opcao == 1) {
 			*qt = *qt + 1; //se a opção foi de inserir, adiciona mais um na quantidade
@@ -53,10 +55,10 @@ int main() {
 			qt = pBuffer; //reajusta o ponteiro de qt
 			opcao = (qt + sizeof(int)); //opção aponta pra qt + 4
 			x = (opcao + sizeof(int)); //x aponta pra opção + 4
-			nomeAux = (char *)(x + sizeof(int));
-			pInicio = (Pessoa *) (nomeAux + (sizeof(char) * 20));//(nomeAux + sizeof(char)*20);
-
-			pAtual = pInicio + (sizeof(Pessoa) * ((*qt)-1)); //agora a pessoa atual aponta pro inicio da memória alocada pra próxima pessoa
+			nomeAux = (char *)(pBuffer + (sizeof(int)*3));
+			pInicio = (Pessoa *)(nomeAux + (sizeof(char)*20)); //pessoa inicio aponta pra proxima posição depois de nomeAux
+			//pAtual = pInicio;
+			pAtual = (pInicio) + (sizeof(Pessoa) * ((*qt)-1)); //agora a pessoa atual aponta pro inicio da memória alocada pra próxima pessoa
 
 			insere(pAtual);
 		} else if(*opcao == 2) {
@@ -66,6 +68,7 @@ int main() {
 				pAtual = pAtual + sizeof(Pessoa);
 			}
 		} else if(*opcao == 3) {
+			pInicio = (Pessoa *) (pBuffer + (sizeof(int)*3) + (sizeof(char)*20));
 			printf("Quem você deseja buscar? ");
 			scanf("%s", nomeAux);
 			busca(nomeAux, pAtual, pInicio, qt, x);
@@ -81,12 +84,12 @@ void insere(Pessoa *pAtual) {
 	printf("Insira o nome: ");
 	scanf("%s", (*pAtual).nome);
 	printf("Insira a idade: ");
-	scanf("%d", &((*pAtual).idade));
+	scanf("%d", &(*pAtual).idade);
 }
 
 void imprime(Pessoa *pAtual) {
 	printf("Nome: %s\n", pAtual->nome);
-	printf("Idade: %d\n", (*pAtual).idade);
+	printf("Idade: %d\n", pAtual->idade);
 	printf("------\n");
 }
 
@@ -96,12 +99,11 @@ void busca(char *nomeAux, Pessoa *pAtual, Pessoa *pInicio, int *qt, int *x) {
 		if(strcmp(pAtual->nome, nomeAux) == 0) {
 			printf("Encontrado\n");
 			printf("Nome: %s\n", pAtual->nome);
-			printf("Idade: %d\n", (*pAtual).idade);
-		} else {
-			printf("Não encontrado.\n");
+			printf("Idade: %d\n", pAtual->idade);
 		}
 		pAtual = pAtual + sizeof(Pessoa);
 	}
+	printf("Fim da busca.\n");
 }
 
 
