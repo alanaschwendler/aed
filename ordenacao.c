@@ -6,7 +6,8 @@
 void imprimir(int *v, int qt);
 int bubbleSort(int *v, int qt);
 int insertionSort(int *v, int qt);
-//void mergeSort(int v*, int qt);
+int selectionSort(int *v, int qt);
+void mergeSort(int *v, int inicio, int meio, int fim);
 
 int main() {
 	int qt = 0, op = 0, ord = 0;
@@ -24,7 +25,7 @@ int main() {
 	
 	do {
 		printf("---Ordenação---\n");
-		printf("1 - Bubble \n2 - Insertion \n0 - Sair \n");
+		printf("1 - Bubble \n2 - Insertion \n3 - Selection \n4 - Merge \n0 - Sair \n");
 		scanf("%d", &op);
 		switch(op) {
 			case 1:
@@ -48,10 +49,30 @@ int main() {
 					break;
 				}
 			case 3:
-				//mergeSort();
-				printf("Ordenado merge.\n");
-				imprimir(vet, qt);
-				break;
+				if(ord == 1) {
+					printf("Já ordenado.\n");
+					break;
+				} else {
+					ord = selectionSort(vet, qt);
+					printf("Ordenado selection.\n");
+					imprimir(vet, qt);
+					break;
+				}
+			case 4:
+				if(ord == 1) {
+					printf("Já ordenado.\n");
+					break;
+				} else {
+					int inicio = vet[0];
+					int fim = (int)(((void *) vet) + sizeof(int));
+					int meio = qt/2;
+					meio = meio + 1;
+
+					mergeSort(vet, inicio, vet[meio], fim);
+					printf("Ordenado merge.\n");
+					imprimir(vet, qt);
+					break;
+				}
 			default: 
 				printf("Programa encerrado.\n");
 				break;
@@ -113,4 +134,53 @@ int insertionSort(int *v, int qt) {
 	return 1;
 }
 
-//void mergeSort(int v*, int qt) { }
+int selectionSort(int *v, int qt) {
+	int i, j, menor, escolhido, posicao;
+	for(i = 0; i <= qt-1; i++) {
+		//o escolhido vai ser o primeiro do vetor, pra começar a comparar com os outros valores
+		escolhido = v[i]; 
+		//o proximo é dito como menor, pra comparar com o escolhido
+		menor = v[i+1];
+		//a posicao é sempre uma a mais do que o valor atual de i
+		posicao = i+1;
+		//j começa em i+1 e vai até o fim do vetor, pra não fazer testes duplicados
+		for(j = i+1; j <= qt; j++) {
+			//testa se a posição atual é menor que o menor valor escolhido no inicio
+			if(v[j] < menor) {
+				//faz a troca e atualiza a posição que é em relação a i+1
+				menor = v[j];
+				posicao = j;
+			}
+		}
+		//ve se o valor de menor é menor que o valor de escolhido
+		if(menor < escolhido) {
+			//troca os valores 
+			v[i] = v[posicao];
+			v[posicao] = escolhido;
+		}
+		imprimir(v, qt);
+	}
+	return 1;
+}
+
+void mergeSort(int *v, int esq, int meio, int dir) {
+	int i, j, k;
+	int l1 = meio - esq + 1;
+	int l2 = dir - meio;
+	int esquerda[l1];
+	int direita[l2];
+
+	printf("ESQ: %d DIR: %d MEIO: %d\n", esq, dir, meio);
+	printf("L2: %d\n", l2);
+
+	for(i = 0; i < l1; i++) {
+		esquerda[i] = v[esq + i];
+	}
+	for(j = 0; j < l2; j++) {
+		direita[j] = v[meio + 1 + j];
+	}
+
+	imprimir(esquerda, l1);
+	printf("\t");
+	imprimir(direita, l2);
+}
