@@ -7,8 +7,12 @@ void imprimir(int *v, int qt);
 int bubbleSort(int *v, int qt);
 int insertionSort(int *v, int qt);
 int selectionSort(int *v, int qt);
-void mergeSort(int *v, int inicio, int meio, int fim);
-void merge(int *vet, int inicio, int fim);
+void mergeSort(int *v, int esq, int dir, int meio);
+int merge(int *, int inicio, int fim);
+void trocarQuick(int *v, int i, int j);
+int particionarQuick(int *v, int ini, int fim);
+int quickSort(int *v, int ini, int fim);
+
 
 int main() {	
 	int qt = 0, op = 0, ord = 0, aux, inicio, fim;
@@ -29,7 +33,7 @@ int main() {
 	
 	do {
 		printf("---Ordenação---\n");
-		printf("1 - Bubble \n2 - Insertion \n3 - Selection \n4 - Merge \n0 - Sair \n");
+		printf("1 - Bubble \n2 - Insertion \n3 - Selection \n4 - Merge \n5 - Quick \n0 - Sair \n");
 		scanf("%d", &op);
 		switch(op) {
 			case 1:
@@ -63,13 +67,29 @@ int main() {
 					break;
 				}
 			case 4:
+					if(ord == 1) {
+						printf("Já ordenado.\n");
+						break;
+					} else {
+						inicio = 0;
+						fim = qt-1;
+
+						ord = merge(vet, inicio, fim);
+						printf("Ordenado merge.\n");
+						imprimir(vet, qt);
+						break;
+					}
+			case 5: 
+				if(ord == 1) {
+					printf("Já ordenado.\n");
+					break;
+				} else {
 					inicio = 0;
 					fim = qt-1;
-
-					merge(vet, inicio, fim);
-					printf("Ordenado merge.\n");
+					ord = quickSort(vet, inicio, fim);
 					imprimir(vet, qt);
 					break;
+				}
 			default: 
 				printf("Programa encerrado.\n");
 				break;
@@ -90,9 +110,9 @@ void imprimir(int *v, int qt) {
 //bubble melhorado
 int bubbleSort(int *v, int qt) {
 	//n controla quantas vezes já percorreu o vetor e troca indica se o vetor já está ordenado
-	int x = 1, i, aux, troca = 1;
+	int i = 1, i, aux, troca = 1;
 	
-	while(x <= qt && troca == 1) {
+	while(i <= qt && troca == 1) {
 		//seta troca com 0 pra poder ordenar
 		troca = 0;
 		for(i = 0; i < qt-1; i++) {
@@ -104,7 +124,7 @@ int bubbleSort(int *v, int qt) {
 				imprimir(v, qt);
 			}
 		}
-		x++;
+		i++;
 	}	
 	return 1;
 }
@@ -160,11 +180,13 @@ int selectionSort(int *v, int qt) {
 	return 1;
 }
 
-void mergeSort(int *v, int esq, int meio, int dir) {
+//Funções do MergeSort
+
+void mergeSort(int *v, int esq, int dir, int meio) {
 	int pLivre, iniEsq, iniDir, i;
 	int qt = esq+dir;
 	int *aux;
-	aux = malloc(sizeof(int) * qt);
+	aux = malloc(sizeof(int) * (qt+1));
 	iniEsq = esq;
 	iniDir = meio + 1;
 	pLivre = esq;
@@ -179,33 +201,74 @@ void mergeSort(int *v, int esq, int meio, int dir) {
 			iniDir++;
 		}
 		pLivre++;
+	}
+	//ajusta o vetor da esquerda
+	for(i = iniEsq; i <= meio; i++) {
+		aux[pLivre] = v[i];
+		pLivre++;
+	}
 
-		//ajusta o vetor da esquerda
-		for(i = iniEsq; i <= meio; i++) {
-			aux[pLivre] = v[i];
-			pLivre++;
-		}
+	//ajusta o vetor da direita
+	for(i = iniDir; i <= dir; i++) {
+		aux[pLivre] = v[i];
+		pLivre++;
+	}
 
-		//ajusta o vetor da direita
-		for(i = iniDir; i <= dir; i++) {
-			aux[pLivre] = v[i];
-			pLivre++;
-		}
-
-		//preenche o vetor final com os valores intercalados
-		for(i = esq; i <= dir; i++) {
-			v[i] = aux[i];
-		}
+	//preenche o vetor final com os valores intercalados
+	for(i = esq; i <= dir; i++) {
+		v[i] = aux[i];
 	}
 	free(aux);
 }
 
-void merge(int *vet, int inicio, int fim) {
+int merge(int *v, int inicio, int fim) {
 	int meio;
 	if(inicio < fim) {
 		meio = (inicio + fim)/2;
-		merge(vet, inicio, meio);
-		merge(vet, meio+1, fim);
-		mergeSort(vet, inicio, fim, meio);
+		merge(v, inicio, meio);
+		merge(v, meio+1, fim);
+		mergeSort(v, inicio, fim, meio);
 	}
+	return 1;
+}
+
+//Funções do QuickSort
+
+void trocarQuick(int *v, int i, int j) {
+	int aux;
+	aux = v[i];
+	v[i] = v[j];
+	v[j] = aux;
+}
+
+int particionarQuick(int *v, int ini, int fim) {
+	int pivo, i, j;
+	pivo = v[(ini + fim)/2];
+	i = ini - 1;
+	j = fim + 1;
+
+	while(i < j) {
+		do { 
+			j--;
+		} while(v[j] > pivo);
+		do {
+			i++;
+		} while(v[i] < pivo);
+
+		if(i < j) {
+			trocarQuick(v, i, j);
+		}
+	}
+	return j;
+}
+
+int quickSort(int *v, int ini, int fim) {
+	int meio;
+
+	if(ini < fim) {
+		meio = particionarQuick(v, ini, fim);
+		quickSort(v, ini, meio);
+		quickSort(v, meio + 1, fim);
+	}
+	return 1;
 }
