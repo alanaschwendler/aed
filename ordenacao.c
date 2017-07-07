@@ -7,10 +7,11 @@ void imprimir(int *v, int qt);
 int bubbleSort(int *v, int qt);
 int insertionSort(int *v, int qt);
 int selectionSort(int *v, int qt);
-void mergeSort(int *v, int inicio, int meio, int fim);
+int mergeSort(int *v, int inicio, int meio, int fim);
+int merge(int *vet, int inicio, int fim);
 
-int main() {
-	int qt = 0, op = 0, ord = 0;
+int main() {	
+	int qt = 0, op = 0, ord = 0, aux;
 	int *vet;
 	vet = malloc(sizeof(int));
 
@@ -18,9 +19,12 @@ int main() {
 		qt++;
 		vet = realloc(vet, (sizeof(int) * qt));
 		printf("Valor: ");
-		scanf("%d", &vet[qt-1]);
-	} while (vet[qt-1] != 0);
-	
+		scanf("%d", &aux);
+		if(aux != 0) {
+			vet[qt-1] = aux;
+		}		
+	} while (aux != 0);
+	qt--;
 	imprimir(vet, qt);
 	
 	do {
@@ -63,12 +67,10 @@ int main() {
 					printf("Já ordenado.\n");
 					break;
 				} else {
-					int inicio = vet[0];
-					int fim = (int)(((void *) vet) + sizeof(int));
-					int meio = qt/2;
-					meio = meio + 1;
+					int inicio = 0;
+					int fim = qt-1;
 
-					mergeSort(vet, inicio, vet[meio], fim);
+					ord = merge(vet, inicio, fim);
 					printf("Ordenado merge.\n");
 					imprimir(vet, qt);
 					break;
@@ -163,24 +165,53 @@ int selectionSort(int *v, int qt) {
 	return 1;
 }
 
-void mergeSort(int *v, int esq, int meio, int dir) {
-	int i, j, k;
-	int l1 = meio - esq + 1;
-	int l2 = dir - meio;
-	int esquerda[l1];
-	int direita[l2];
+int mergeSort(int *v, int esq, int meio, int dir) {
+	int pLivre, iniEsq, iniDir, i;
+	int qt = esq+dir;
+	int *aux;
+	aux = malloc(sizeof(int) * qt);
+	iniEsq = esq;
+	iniDir = meio + 1;
+	pLivre = esq;
 
-	printf("ESQ: %d DIR: %d MEIO: %d\n", esq, dir, meio);
-	printf("L2: %d\n", l2);
+	while(iniEsq <= meio && iniDir <= dir) {
+		//intercala os valores do vetor
+		if(v[iniEsq] <= v[iniDir]) {
+			aux[pLivre] = v[iniEsq];
+			iniEsq++;
+		} else {
+			aux[pLivre] = v[iniDir];
+			iniDir++;
+		}
+		pLivre++;
 
-	for(i = 0; i < l1; i++) {
-		esquerda[i] = v[esq + i];
+		//ajusta o vetor da esquerda
+		for(i = iniEsq; i <= meio; i++) {
+			aux[pLivre] = v[i];
+			pLivre++;
+		}
+
+		//ajusta o vetor da direita
+		for(i = iniDir; i <= dir; i++) {
+			aux[pLivre] = v[i];
+			pLivre++;
+		}
+
+		//preenche o vetor final com os valores intercalados
+		for(i = esq; i <= dir; i++) {
+			v[i] = aux[i];
+		}
 	}
-	for(j = 0; j < l2; j++) {
-		direita[j] = v[meio + 1 + j];
-	}
+	return 1;
+}
 
-	imprimir(esquerda, l1);
-	printf("\t");
-	imprimir(direita, l2);
+int merge(int *vet, int inicio, int fim) {
+	int meio, ord = 0;
+	if(inicio < fim) {
+		meio = (inicio + fim)/2;
+		merge(vet, inicio, meio);
+		merge(vet, meio+1, fim);
+		ord = mergeSort(vet, inicio, fim, meio);
+	}
+	return ord;
 }
