@@ -7,11 +7,11 @@ void imprimir(int *v, int qt);
 int bubbleSort(int *v, int qt);
 int insertionSort(int *v, int qt);
 int selectionSort(int *v, int qt);
-int mergeSort(int *v, int inicio, int meio, int fim);
-int merge(int *vet, int inicio, int fim);
+void mergeSort(int *v, int inicio, int meio, int fim);
+void merge(int *vet, int inicio, int fim);
 
 int main() {	
-	int qt = 0, op = 0, ord = 0, aux;
+	int qt = 0, op = 0, ord = 0, aux, inicio, fim;
 	int *vet;
 	vet = malloc(sizeof(int));
 
@@ -63,18 +63,13 @@ int main() {
 					break;
 				}
 			case 4:
-				if(ord == 1) {
-					printf("Já ordenado.\n");
-					break;
-				} else {
-					int inicio = 0;
-					int fim = qt-1;
+					inicio = 0;
+					fim = qt-1;
 
-					ord = merge(vet, inicio, fim);
+					merge(vet, inicio, fim);
 					printf("Ordenado merge.\n");
 					imprimir(vet, qt);
 					break;
-				}
 			default: 
 				printf("Programa encerrado.\n");
 				break;
@@ -165,7 +160,7 @@ int selectionSort(int *v, int qt) {
 	return 1;
 }
 
-int mergeSort(int *v, int esq, int meio, int dir) {
+void mergeSort(int *v, int esq, int meio, int dir) {
 	int pLivre, iniEsq, iniDir, i;
 	int qt = esq+dir;
 	int *aux;
@@ -202,16 +197,15 @@ int mergeSort(int *v, int esq, int meio, int dir) {
 			v[i] = aux[i];
 		}
 	}
-	return 1;
+	free(aux);
 }
 
-int merge(int *vet, int inicio, int fim) {
-	int meio, ord = 0;
+void merge(int *vet, int inicio, int fim) {
+	int meio;
 	if(inicio < fim) {
 		meio = (inicio + fim)/2;
 		merge(vet, inicio, meio);
 		merge(vet, meio+1, fim);
-		ord = mergeSort(vet, inicio, fim, meio);
+		mergeSort(vet, inicio, fim, meio);
 	}
-	return ord;
 }
