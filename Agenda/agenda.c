@@ -24,6 +24,16 @@ int main() {
 	Pessoa 	*pInicio;
 	Pessoa 	*pAtual;
 
+<<<<<<< HEAD
+	// pBuffer = malloc(sizeof(int)*3); //aloca memória pros ints e pro nome auxiliar(usado na busca)
+	// pBuffer = realloc(pBuffer, sizeof(int)*3 + sizeof(char)*20);
+	pBuffer = malloc(sizeof(int)*3 + sizeof(char)*20); //aloca memória pros ints e pro nome auxiliar(usado na busca)
+	qt = pBuffer;
+	*qt = 0; //seta como 0
+	opcao = (qt + sizeof(int)); //opção aponta pra qt + 4	
+	x = (opcao + sizeof(int));
+	nomeAux = (char *)(x + sizeof(int));
+=======
 	pBuffer = malloc(sizeof(int)*3); //aloca memória pros ints e pro nome auxiliar(usado na busca)
 	pBuffer = realloc(pBuffer, sizeof(int)*3 + sizeof(char)*20);
 	qt 		= (int *) pBuffer;
@@ -31,6 +41,7 @@ int main() {
 	opcao   = (int *)	((void *) qt)		+ sizeof(int); //opção aponta pra qt + 4	
 	x 	    = (int *)	((void *) opcao)	+ sizeof(int);
 	nomeAux = (char *)	((void *) x)		+ sizeof(int);
+>>>>>>> 2f4f5ff498faa3dae0889ddade09a963da703d64
 
 	printf("1 - Inserir Pessoa\n");
 	printf("2 - Listar Pessoas\n");
@@ -45,6 +56,27 @@ int main() {
 			*qt = *qt + 1; //se a opção foi de inserir, adiciona mais um na quantidade
 			
 			pBuffer = realloc(pBuffer, (sizeof(int)*3) + (sizeof(char)*20) + (sizeof(Pessoa) * (*qt))); //realoca espaço de acordo com a qt de pessoas //  + (sizeof(char)*20)
+<<<<<<< HEAD
+			qt = pBuffer; //reajusta o ponteiro de qt
+			opcao = qt + (sizeof(int)); //opção aponta pra qt + 4
+			x = opcao + (sizeof(int)); //x aponta pra opção + 4
+			nomeAux = (char *)(pBuffer + (sizeof(int)*3));
+			// nomeAux = (char *)(x + (sizeof(int)));
+			pInicio = (Pessoa *)(nomeAux + (sizeof(char)*20)); //pessoa inicio aponta pra proxima posição depois de nomeAux
+			//pAtual = pInicio;
+			pAtual = (pInicio) + (sizeof(Pessoa) * ((*qt)-1)); //agora a pessoa atual aponta pro inicio da memória alocada pra próxima pessoa
+			printf("%p\n", pInicio);
+			
+			/*printf("pBuffer: \t%p\n", pBuffer);
+			printf("qt: \t\t%p\n", qt);
+			printf("opcao: \t\t%p\n", opcao);
+			printf("x: \t\t%p\n", x);
+			printf("nomeAux: \t%p\n", nomeAux);
+			printf("pInicio: \t%p\n", pInicio);
+			printf("pAtual: \t%p\n", pAtual);
+			*/
+			insere(pAtual);
+=======
 			qt 		= (int *)		pBuffer; //reajusta o ponteiro de qt
 			opcao 	= (int *)		((void *) qt)		+ sizeof(int); //opção aponta pra qt + 4
 			x 		= (int *)		((void *) opcao)	+ sizeof(int); //x aponta pra opção + 4
@@ -53,21 +85,33 @@ int main() {
 			pAtual  = (Pessoa *)	((void *) pInicio) 	+ sizeof(Pessoa) * ((*qt)-1); //agora a pessoa atual aponta pro inicio da memória alocada pra próxima pessoa
 
 			inserir(pAtual);
+>>>>>>> 2f4f5ff498faa3dae0889ddade09a963da703d64
 		} else if(*opcao == 2) {
 			pAtual = pInicio;
 
 			for(*x = 0; *x < *qt; (*x)++) {
+<<<<<<< HEAD
+				printf("%p\n", pAtual);
+				imprime(pAtual);
+				pAtual = pAtual + sizeof(Pessoa);
+=======
 				imprimir(pAtual);
 				pAtual = (Pessoa *) ((void *) pAtual) + sizeof(Pessoa);
+>>>>>>> 2f4f5ff498faa3dae0889ddade09a963da703d64
 			}
 		} else if(*opcao == 3) {
 			printf("Quem você deseja buscar? ");
+<<<<<<< HEAD
+			scanf("%s%*c", nomeAux);
+			busca(nomeAux, pAtual, pInicio, qt, x);
+=======
 			scanf("%s", nomeAux);
 			buscar(nomeAux, pAtual, pInicio, qt, x);
 		} else if(*opcao == 4) {
 			printf("Quem você deseja remover? ");
 			scanf("%s", nomeAux);
 			remover(nomeAux, pAtual, pInicio, qt, x, pBuffer, opcao);
+>>>>>>> 2f4f5ff498faa3dae0889ddade09a963da703d64
 		}
 	} while(*opcao != 0);
 
@@ -76,12 +120,21 @@ int main() {
 	return 0;
 }
 
+<<<<<<< HEAD
+void insere(Pessoa *pAtual) {
+	printf("%p\n", pAtual);
+=======
 void inserir(Pessoa *pAtual) {
+>>>>>>> 2f4f5ff498faa3dae0889ddade09a963da703d64
 	printf("Insira o nome: ");
-	scanf("%s", (*pAtual).nome);
+	scanf("%s%*c", (*pAtual).nome);
 	printf("Insira a idade: ");
 	scanf("%d", &(*pAtual).idade);
+<<<<<<< HEAD
+	printf("DEBUG:%s\n",(*pAtual).nome);
+=======
 	scanf("%*c"); 
+>>>>>>> 2f4f5ff498faa3dae0889ddade09a963da703d64
 }
 
 void imprimir(Pessoa *pAtual) {

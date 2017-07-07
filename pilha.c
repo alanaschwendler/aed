@@ -1,6 +1,7 @@
 //Alana Schwendler - M1
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <string.h>
 
 typedef struct a {
@@ -123,9 +124,6 @@ void reset(Pilha *p) {
 Aluno buscaNome(Aluno *a, Pilha *p) {
 	int x = 0;
 	for(x = 0; x < p->quantidade; x++) {
-		if(strcmp(a->nome, p->aluno->nome) == 0)  {
-			return ((*p).aluno[x]);
-		}
 	}
 }
 
