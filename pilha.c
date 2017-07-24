@@ -17,10 +17,10 @@ typedef struct p {
 } Pilha;
 
 void push(Aluno *a, Pilha *p);
-void pop(Aluno *a, Pilha *p);
-void clear(Pilha *p);
-void reset(Pilha *p);
-Aluno buscaNome(Aluno *a, Pilha *p);
+//void pop(Aluno *a, Pilha *p);
+//void clear(Pilha *p);
+//void reset(Pilha *p);
+//Aluno buscaNome(Aluno *a, Pilha *p);
 void listar(Aluno *a, Pilha *p);
 
 int main() {
@@ -52,19 +52,19 @@ int main() {
 				printf("Matricula: ");
 				scanf("%d", &aluno->matricula);
 
-				pop(aluno, pilha);
+				//pop(aluno, pilha);
 				break;
 			case 3:
 				printf("-----LIMPAR-----\n");
-				clear(pilha);
+				//clear(pilha);
 				break;
 			case 4:
 				printf("-----RESETAR-----\n");
-				reset(pilha);
+				//reset(pilha);
 				break;
 			case 5:
 				printf("-----BUSCAR-----\n");
-				buscaNome(aluno, pilha);
+				//buscaNome(aluno, pilha);
 				break;
 			case 6:
 				printf("-----LISTAR-----\n");
@@ -82,59 +82,59 @@ int main() {
 
 void push(Aluno *a, Pilha *p) {
 	//incrementa a quantidade da pilha
-	p->quantidade++;
+	p->quantidade = p->quantidade + 1;
 
 	//vai alocar espaço para a pilha de acordo com a quantidade de alunos inseridos
 	p = (Pilha *)realloc(p, sizeof(Aluno) * p->quantidade);	
 	//ajusta os ponteiros da pilha
 	//o primeiro aluno na pilha é a primeira posição da pilha
-	p->primeiro = p;
+	p->primeiro = ((Aluno *) p);
 	//o ultimo é quem está sendo inserido 
 	p->ultimo = a;
 }
 
 //tira um elemento da pilha
-void pop(Aluno *a, Pilha *p) {
-	//decrementa a quantidade total
-	p->quantidade--;
-	//o ultimo vira NULL
-	p->ultimo = NULL;
-	//realoca memória pra nova quantidade de alunos
-	p = realloc(p, sizeof(Aluno) * (p->quantidade));
-	//ajusta os ponteiros
-	p->primeiro = p;
-	p->ultimo = p + (sizeof(Aluno) * (p->quantidade - 1));
-}
+// void pop(Aluno *a, Pilha *p) {
+// 	//decrementa a quantidade total
+// 	p->quantidade--;
+// 	//o ultimo vira NULL
+// 	p->ultimo = NULL;
+// 	//realoca memória pra nova quantidade de alunos
+// 	p = realloc(p, sizeof(Aluno) * (p->quantidade));
+// 	//ajusta os ponteiros
+// 	p->primeiro = p;
+// 	p->ultimo = p + (sizeof(Aluno) * (p->quantidade - 1));
+// }
 
 //limpa todos os dados da pilha
-void clear(Pilha *p) {
-	p->primeiro = NULL;
-	p->ultimo = NULL;
-	p->aluno = NULL;
-}
+// void clear(Pilha *p) {
+// 	p->primeiro = NULL;
+// 	p->ultimo = NULL;
+// 	p->aluno = NULL;
+// }
 
 //reseta todos os dados da pilha
-void reset(Pilha *p) {
-	p->primeiro = NULL;
-	p->ultimo = NULL;
-	p->aluno = NULL;
-	p->quantidade = 0;
-}
+// void reset(Pilha *p) {
+// 	p->primeiro = NULL;
+// 	p->ultimo = NULL;
+// 	p->aluno = NULL;
+// 	p->quantidade = 0;
+// }
 
-Aluno buscaNome(Aluno *a, Pilha *p) {
-	int x = 0;
-	for(x = 0; x < p->quantidade; x++) {
-	}
-}
+// Aluno buscaNome(Aluno *a, Pilha *p) {
+// 	int x = 0;
+// 	for(x = 0; x < p->quantidade; x++) {
+// 	}
+// }
 
 void listar(Aluno *a, Pilha *p) {
 	int x = 0;
 	printf("Quantidade de alunos na pilha: %d\n", p->quantidade);
-	a = (Pilha *) p->primeiro;
+	a = ((Aluno *) p->primeiro);
 	for(x = 0; x < p->quantidade; x++) {
-		printf("Nome: %s\n", a->nome);
-		printf("Matricula: %d\n", a->matricula);
+		printf("Nome: %s\n", p[x].aluno->nome);
+		printf("Matricula: %d\n", p[x].aluno->matricula);
 		printf("-----\n\n\n");
-	a = (Aluno *)a + sizeof(Aluno);
+		a = (Aluno *)a + sizeof(Aluno);
 	}
 }
