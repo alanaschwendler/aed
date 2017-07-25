@@ -1,7 +1,6 @@
 //Alana Schwendler - M1
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <string.h>
 
 typedef struct a {
@@ -21,7 +20,7 @@ void push(Aluno *a, Pilha *p);
 //void clear(Pilha *p);
 //void reset(Pilha *p);
 //Aluno buscaNome(Aluno *a, Pilha *p);
-void listar(Aluno *a, Pilha *p);
+void listar(Pilha *p);
 
 int main() {
 	Aluno *aluno;
@@ -68,7 +67,8 @@ int main() {
 				break;
 			case 6:
 				printf("-----LISTAR-----\n");
-				listar(aluno, pilha);
+				listar(pilha);
+				break;
 			default:
 				printf("Programa encerrado.\n");
 				break;
@@ -90,7 +90,11 @@ void push(Aluno *a, Pilha *p) {
 	//o primeiro aluno na pilha é a primeira posição da pilha
 	p->primeiro = ((Aluno *) p);
 	//o ultimo é quem está sendo inserido 
-	p->ultimo = a;
+	p->ultimo = p->primeiro + (p->quantidade -1);
+
+	//copia os valores do aluno pro que foi inserido na pilha
+	strcpy(p->ultimo->nome, a->nome);
+	p->ultimo->matricula = a->matricula;
 }
 
 //tira um elemento da pilha
@@ -127,14 +131,21 @@ void push(Aluno *a, Pilha *p) {
 // 	}
 // }
 
-void listar(Aluno *a, Pilha *p) {
-	int x = 0;
-	printf("Quantidade de alunos na pilha: %d\n", p->quantidade);
-	a = ((Aluno *) p->primeiro);
-	for(x = 0; x < p->quantidade; x++) {
-		printf("Nome: %s\n", p[x].aluno->nome);
-		printf("Matricula: %d\n", p[x].aluno->matricula);
-		printf("-----\n\n\n");
-		a = (Aluno *)a + sizeof(Aluno);
+void listar(Pilha *p) {
+	int x = 0; //controle do loop
+	Aluno *a; //aluno auxiliar
+	a = (Aluno *)p; //o auxiliar vai ser o primeiro da pilha
+
+	printf("\n");
+	if(p->quantidade == 0) {
+		printf("Pilha sem registros.\n");
+	} else {
+		printf("Quantidade de alunos na pilha: %d\n", p->quantidade);
+		for(x = 0; x < p->quantidade; x++) {
+			printf("Nome: %s\n", a->nome);
+			printf("Matricula: %d\n", a->matricula);
+			a++; //incrementa uma struct aluno em a
+		}
 	}
+	printf("\n");
 }
