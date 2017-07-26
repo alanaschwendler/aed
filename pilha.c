@@ -9,9 +9,8 @@ typedef struct a {
 } Aluno;
 
 typedef struct p {
-	Aluno *primeiro; //
+	Aluno *primeiro;
 	Aluno *ultimo;
-	Aluno *aluno;
 	int quantidade;
 } Pilha;
 
@@ -125,7 +124,6 @@ void pop(Pilha *p) {
 void clear(Pilha *p) {
 	p->primeiro = NULL;
 	p->ultimo = NULL;
-	p->aluno = NULL;
 	p->quantidade = 0;
 	printf("Lista limpa.\n");
 }
