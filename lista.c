@@ -44,7 +44,7 @@ int main() {
 				printf("CPF (apenas numeros): ");
 				scanf("%d", &cpf);
 
-				inserir(i, nomeInsere, idade, cpf);
+				inserir(i, nomeInserir, idade, cpf);
 				break;
 			case 2:
 				printf("-----REMOVER REGISTRO-----\n");
@@ -88,9 +88,9 @@ void remover(Item *i, char nome[]){
 	j = i; //j tem a cabeça da lista
 	k = i->prox; //k tem o próximo item da lista
 	
-	for(j = i->prox; j != NULL; j = j->prox) {
-		if(strcmp(j->nome, nome) == 0) {
-
+	while((j != NULL) || (k != NULL)) {
+		for() {
+			
 		}
 	}
 }
