@@ -14,6 +14,7 @@ typedef struct Item {
 
 void inserir(Item *i, char nome[], int idade, int cpf);
 void remover(Item *i, char nome[]);
+void limpar(Item *i); 
 void imprimir(Item *i);
 
 int main() {
@@ -38,7 +39,7 @@ int main() {
 				int cpf;
 
 				printf("Nome: " );
-				scanf("%[^\n]s", nomeInserir);
+				scanf("%s", nomeInserir);
 				printf("Idade: ");
 				scanf("%d", &idade);
 				printf("CPF (apenas numeros): ");
@@ -51,9 +52,14 @@ int main() {
 				char nomeRemover[20];
 
 				printf("Nome: ");
-				scanf("%[^\n]s", nomeRemover);
+				scanf("%s", nomeRemover);
 
 				remover(i, nomeRemover);
+				break;
+			case 3:
+				printf("-----LIMPAR REGISTROS-----\n");
+
+				limpar(i);
 				break;
 			case 4:
 				printf("-----IMPRIMIR REGISTROS-----\n");
@@ -66,11 +72,14 @@ int main() {
 		}
 		
 	} while(op != 0);
+
+	free(i);
 	return 0;
 }
 
 void inserir(Item *i, char nome[], int idade, int cpf) {
 	Item *novo;
+
 	novo = malloc(sizeof(Item));
 	//copia os valores pro novo nodo
 	strcpy(novo->nome, nome);
@@ -84,20 +93,51 @@ void inserir(Item *i, char nome[], int idade, int cpf) {
 }
 
 void remover(Item *i, char nome[]){
-	Item *j, *k; //itens auxiliares
-	j = i; //j tem a cabeça da lista
-	k = i->prox; //k tem o próximo item da lista
-	
-	while((j != NULL) || (k != NULL)) {
-		for() {
-			
+	int ok = 0;
+
+	if(i->prox == NULL) {
+		printf("Não há registros.\n");
+	} else {
+		while((i->prox != NULL) && (strcmp(i->prox->nome, nome)) != 0) { //enquanto o próximo não for nulo e for diferente do elemento que eu quero remover
+			i = i->prox; //anda na lista	
 		}
+
+		if(i->prox != NULL) { // se o próximo for diferente de nulo então é o elemento que eu quero remover
+			Item *k;
+			k = i->prox;
+			i->prox = i->prox->prox;
+			free(k);
+			ok++;
+			printf("Removido.\n");
+		}
+	}
+
+	if(ok == 0) {
+		printf("Registro não existente na lista.\n");
 	}
 }
 
 void imprimir(Item *i) {
 	Item *j;
-	for(j = i->prox; j != NULL; j = j->prox) {
-		printf("Nome: %s, Idade: %d, CPF: %d\n", j->nome, j->idade, j->cpf);
+
+	if(i->prox == NULL) {
+		printf("Não há registros.\n");
+	} else {
+		for(j = i->prox; j != NULL; j = j->prox) {
+			printf("Nome: %s, Idade: %d, CPF: %d\n", j->nome, j->idade, j->cpf);
+		}
 	}
+}
+
+void limpar(Item *i) {
+	Item *kill;
+
+	while(i->prox != NULL) {
+		kill = i->prox;
+		i->prox = i->prox->prox;
+		free(kill);
+	}
+	i->prox = NULL;
+
+	printf("Lista zerada. \n");
 }
