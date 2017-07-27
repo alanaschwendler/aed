@@ -4,16 +4,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct Pessoa {
+typedef struct p {
 	char nome[20];
 	int idade;
-} pessoa;
+} Pessoa;
 
-typedef struct Fila {
-	Fila *next;
-	Fila *prev;
-	Pessoa *pessoa;
-} fila;
+typedef struct f {
+	struct Fila *next;
+	struct Fila *prev;
+	struct Pessoa *pessoa;
+} Fila;
 
 void push(Fila *f, char nome[], int idade);
 
@@ -21,8 +21,8 @@ int main() {
 	Fila *f;
 	f = malloc(sizeof(Fila));
 
-	Pessoa *p;
-	p = malloc(sizeof(Pessoa));
+	// Pessoa *p;
+	// p = malloc(sizeof(Pessoa));
 
 	int op;
 
@@ -53,12 +53,13 @@ int main() {
 
 	} while(op != 0);
 
+	free(f);
 	return 0;
 }
 
 void push(Fila *f, char nome[], int idade) {
 	if(f->next == NULL) { //se o próximo da fila é NULL, é ai que precisa inserir
-		f = f->next; //anda na fila
+		f->next = f->next->next; //anda na fila
 		strcpy(f->pessoa->nome, nome); //copia os dados pra pessoa	
 		f->pessoa->idade = idade;
 		f->next = NULL;
