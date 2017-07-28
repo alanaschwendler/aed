@@ -10,19 +10,21 @@ typedef struct p {
 } Pessoa;
 
 typedef struct f {
-	struct Fila *next;
-	struct Fila *prev;
-	struct Pessoa *pessoa;
+	struct f *next;
+	struct f *prev;
+	Pessoa *pessoa;
+	int qt;
 } Fila;
 
 void push(Fila *f, char nome[], int idade);
+void imprimir(Fila *f);
 
 int main() {
 	Fila *f;
 	f = malloc(sizeof(Fila));
+	f->prev = NULL;
+	f->next = NULL;
 
-	// Pessoa *p;
-	// p = malloc(sizeof(Pessoa));
 
 	int op;
 
@@ -46,6 +48,11 @@ int main() {
 
 				push(f, nomeInserir, idadeInserir);
 				break;
+			case 3:
+				printf("-----IMPRIMIR-----\n");
+
+				imprimir(f);
+				break;
 			default:
 				printf("Programa encerrado. \n");
 				break;
@@ -58,10 +65,41 @@ int main() {
 }
 
 void push(Fila *f, char nome[], int idade) {
-	if(f->next == NULL) { //se o próximo da fila é NULL, é ai que precisa inserir
-		f->next = f->next->next; //anda na fila
-		strcpy(f->pessoa->nome, nome); //copia os dados pra pessoa	
-		f->pessoa->idade = idade;
-		f->next = NULL;
+	Fila *nv;
+	Fila *aux;
+
+	Pessoa *p;
+	p = malloc(sizeof(Pessoa));
+
+	aux = f->next;
+
+	f->qt++;
+	nv = malloc(sizeof(Fila));
+	nv->pessoa = p;
+
+	if(aux != NULL) {
+		while(aux->next != NULL) { //enquanto o próximo for diferente de NULL
+			aux = aux->next; //anda na fi
+		}
+	 	printf("sddsdf\n");
+		aux->next = nv;
+		nv->prev = aux;
+		nv->next = NULL;
+		strcpy(nv->pessoa->nome, nome);
+		nv->pessoa->idade = idade;
+
+	} else {
+		f->next = nv;
+		nv->prev = f;
+		nv->next = NULL;
+		strcpy(nv->pessoa->nome, nome);
+		nv->pessoa->idade = idade;
 	}
+	printf("Inserido.\n");
+}
+
+void imprimir(Fila *f) {
+	int x = 0;
+
+	
 }
