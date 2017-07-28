@@ -16,8 +16,10 @@ typedef struct f {
 	int qt;
 } Fila;
 
-void push(Fila *f, char nome[], int idade);
+void inserir(Fila *f, char nome[], int idade);
+void remover(Fila *f);
 void imprimir(Fila *f);
+void limpar(Fila *f);
 
 int main() {
 	Fila *f;
@@ -46,12 +48,22 @@ int main() {
 				printf("Idade: ");
 				scanf("%d", &idadeInserir);
 
-				push(f, nomeInserir, idadeInserir);
+				inserir(f, nomeInserir, idadeInserir);
+				break;
+			case 2:
+				printf("-----REMOVER-----\n");
+
+				remover(f);
 				break;
 			case 3:
 				printf("-----IMPRIMIR-----\n");
 
 				imprimir(f);
+				break;
+			case 4:
+				printf("-----LIMPAR-----\n");
+
+				limpar(f);
 				break;
 			default:
 				printf("Programa encerrado. \n");
@@ -64,7 +76,7 @@ int main() {
 	return 0;
 }
 
-void push(Fila *f, char nome[], int idade) {
+void inserir(Fila *f, char nome[], int idade) {
 	Fila *nv;
 	Fila *aux;
 
@@ -81,7 +93,7 @@ void push(Fila *f, char nome[], int idade) {
 		while(aux->next != NULL) { //enquanto o próximo for diferente de NULL
 			aux = aux->next; //anda na fi
 		}
-	 	printf("sddsdf\n");
+
 		aux->next = nv;
 		nv->prev = aux;
 		nv->next = NULL;
@@ -95,11 +107,54 @@ void push(Fila *f, char nome[], int idade) {
 		strcpy(nv->pessoa->nome, nome);
 		nv->pessoa->idade = idade;
 	}
-	printf("Inserido.\n");
+	printf("Inserido. \n");
+}
+
+void remover(Fila *f) {
+	Fila *aux;
+
+	aux = f->next;
+
+	if(f->next == NULL) {
+		printf("Fila vazia. \n");
+	} else {
+		f->next = aux->next;
+		free(aux);
+		printf("Removido. \n");
+	}
 }
 
 void imprimir(Fila *f) {
-	int x = 0;
+	Fila *aux;
 
-	
+	aux = f->next;
+
+	if(f->next == NULL) {
+		printf("Fila vazia. \n");
+	} else {
+		while(aux != NULL) {
+			printf("Nome: %s, Idade: %d\n", aux->pessoa->nome, aux->pessoa->idade);
+			aux = aux->next;
+		}
+	}
+	printf("Fim dos registros. \n");
+}
+
+void limpar(Fila *f) {
+	Fila *aux, *p;
+
+	aux = f->next;
+	if(aux == NULL) {
+		free(f);
+		printf("Apenas a cabeça da fila foi removida. Não há mais elementos. \n");
+	} else {
+		while(aux != NULL) {
+			p = aux;
+			aux = aux->next;
+			free(p);
+		}
+		free(aux);
+		f->next = NULL;
+		printf("Todos os elementos foram removidos. \n");
+	}
 }
