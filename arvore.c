@@ -10,14 +10,15 @@ typedef struct n {
 	struct n *dir;
 } No;
 
-int maior(int x, int y);
+// void rotacaoEE(No *n);
+// void rotacaoDD(No *n);
+// void rotacaoED(No *n);
+// void rotacaoDE(No *n);
+// int maior(int x, int y);
+
 int alturaEsq(No *n);
-int alturaDir(No *n)
-int balanceamento(No *n);
-void rotacaoEE(No *n);
-void rotacaoDD(No *n);
-void rotacaoED(No *n);
-void rotacaoDE(No *n);
+int alturaDir(No *n);
+int fatorBalanceamento(No *raiz);
 No* inserir(No *n, int valor);
 void imprimirLinha(No *raiz, int altura) ;
 void buscar(No *n, int valor);
@@ -25,9 +26,8 @@ void buscar(No *n, int valor);
 int main() {
 	No *raiz;
 	raiz = NULL;
-
-	int op;
-	int valor;
+	
+	int x, alturaE, alturaD, altura, fb, op, valor;
 
 	printf("1 - Inserir \n2 - Imprimir \n3 - Buscar \n0 - Sair \n");
 
@@ -49,21 +49,23 @@ int main() {
 				printf("-----IMPRIMIR-----\n");
 
 				printf("%d\n", raiz->num);
-				int x, alturaEsq, alturaDir, altura;
-				alturaEsq = alturaEsq(raiz);
-				alturaDir = alturaDir(raiz);
+				alturaE = alturaEsq(raiz);
+				alturaD = alturaDir(raiz);
 
 				//verifica qual o lado da árvore é maior
-				if(alturaEsq > alturaDir) {
-					altura = alturaEsq;
+				if(alturaE > alturaD) {
+					altura = alturaE;
 				} else {
-					altura = alturaDir;
+					altura = alturaD;
 				}
 
 				//percorre até a altura maior da árvore
 				for(x = 0; x < altura; x++) {
 					imprimirLinha(raiz, x);
 				}
+
+				fb = fatorBalanceamento(raiz);
+				printf("Fator de balanceamento: %d\n", fb);
 				break;
 			case 3:
 				printf("-----BUSCAR-----\n");
@@ -135,28 +137,6 @@ No* inserir(No *raiz, int valor) {
 	return raiz;
 }
 
-int alturaEsq(No *n) {
-	int alt = 0;
-
-	while(n != NULL) {
-		alt++;
-		n = n->esq;
-	}
-
-	return alt;
-}
-
-int alturaDir(No *n) {
-	int alt = 0;
-
-	while(n != NULL) {
-		alt++;
-		n = n->dir;
-	}
-
-	return alt;
-}
-
 void imprimirLinha(No *raiz, int altura) {
 	if(raiz == NULL) {
 		return;
@@ -184,4 +164,35 @@ void buscar(No *n, int valor) {
 	} else {
 		printf("Não encontrado.\n");
 	}
+}
+
+int alturaEsq(No *n) {
+	int alt = 0;
+
+	while(n != NULL) {
+		alt++;
+		n = n->esq;
+	}
+
+	return alt;
+}
+
+int alturaDir(No *n) {
+	int alt = 0;
+
+	while(n != NULL) {
+		alt++;
+		n = n->dir;
+	}
+
+	return alt;
+}
+
+
+int fatorBalanceamento(No *raiz) {
+	int fb = 0;
+
+	fb = alturaDir(raiz->dir) - alturaEsq(raiz->esq);
+
+	return fb;
 }
