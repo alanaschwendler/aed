@@ -11,14 +11,16 @@ typedef struct n {
 } No;
 
 int maior(int x, int y);
-int alturaArvore(No *n);
+int alturaEsq(No *n);
+int alturaDir(No *n)
 int balanceamento(No *n);
 void rotacaoEE(No *n);
 void rotacaoDD(No *n);
 void rotacaoED(No *n);
 void rotacaoDE(No *n);
 No* inserir(No *n, int valor);
-void imprimir(No *raiz);
+void imprimirLinha(No *raiz, int altura) ;
+void buscar(No *n, int valor);
 
 int main() {
 	No *raiz;
@@ -27,7 +29,7 @@ int main() {
 	int op;
 	int valor;
 
-	printf("1 - Inserir \n0 - Sair\n");
+	printf("1 - Inserir \n2 - Imprimir \n3 - Buscar \n0 - Sair \n");
 
 	do {
 		printf("Opção: ");
@@ -47,7 +49,29 @@ int main() {
 				printf("-----IMPRIMIR-----\n");
 
 				printf("%d\n", raiz->num);
-				imprimir(raiz);
+				int x, alturaEsq, alturaDir, altura;
+				alturaEsq = alturaEsq(raiz);
+				alturaDir = alturaDir(raiz);
+
+				//verifica qual o lado da árvore é maior
+				if(alturaEsq > alturaDir) {
+					altura = alturaEsq;
+				} else {
+					altura = alturaDir;
+				}
+
+				//percorre até a altura maior da árvore
+				for(x = 0; x < altura; x++) {
+					imprimirLinha(raiz, x);
+				}
+				break;
+			case 3:
+				printf("-----BUSCAR-----\n");
+
+				printf("Valor: ");
+				scanf("%d", &valor);
+
+				buscar(raiz, valor);
 				break;
 			default:
 				printf("Programa encerrado.\n");
@@ -81,10 +105,10 @@ No* inserir(No *raiz, int valor) {
 					aux->esq = malloc(sizeof(No));
 
 					aux->esq->num = valor;
-					aux->esq->altura = aux->altura++;
+					aux->esq->altura = aux->altura + 1;
 					aux->esq->esq = NULL;
 					aux->esq->dir = NULL;
-
+					printf("Altura: %d\n", aux->esq->altura);
 					printf("Inserido à esquerda.\n");
 					return raiz;
 				}
@@ -95,10 +119,10 @@ No* inserir(No *raiz, int valor) {
 					aux->dir = malloc(sizeof(No));
 
 					aux->dir->num = valor;
-					aux->dir->altura = aux->altura++;
+					aux->dir->altura = aux->altura + 1;
 					aux->dir->esq = NULL;
 					aux->dir->dir = NULL;
-
+					printf("Altura: %d\n", aux->dir->altura);
 					printf("Inserido à direita.\n");
 					return raiz;
 				}
@@ -111,25 +135,53 @@ No* inserir(No *raiz, int valor) {
 	return raiz;
 }
 
-int alturaArvore(No *n) {
-	if(n->esq == NULL) {
-		return n->altura;
+int alturaEsq(No *n) {
+	int alt = 0;
+
+	while(n != NULL) {
+		alt++;
+		n = n->esq;
+	}
+
+	return alt;
+}
+
+int alturaDir(No *n) {
+	int alt = 0;
+
+	while(n != NULL) {
+		alt++;
+		n = n->dir;
+	}
+
+	return alt;
+}
+
+void imprimirLinha(No *raiz, int altura) {
+	if(raiz == NULL) {
+		return;
+	}
+	if(raiz->altura == altura) {
+		printf("%d \t|%d\n", raiz->num, altura);
 	} else {
-		return alturaArvore(n->esq);
+		imprimirLinha(raiz->esq, altura);
+		imprimirLinha(raiz->dir, altura);
 	}
 }
 
-void imprimir(No *raiz) {
-	No *aux;
-	aux = raiz;
-	int x, altura;
-
-	altura = alturaArvore(raiz);
-	for(x = 0; x < altura; x++) {
-		if(aux->altura == altura) {
-			printf("\t%d\n", aux->esq->num);
-			printf("\t%d\n", aux->dir->num);
-			aux = aux->esq;
+void buscar(No *n, int valor) {
+	if(n != NULL) {
+		if(valor == n->num) {
+			printf("Valor encontrado: %d \t |Altura: %d\n", n->num, n->altura);
+			return;
+		} else if(valor > n->num) {
+			n = n->dir;
+			buscar(n, valor);
+		} else if(valor < n->num) {
+			n = n->esq;
+			buscar(n, valor);
 		}
+	} else {
+		printf("Não encontrado.\n");
 	}
 }
