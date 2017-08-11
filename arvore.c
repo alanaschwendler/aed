@@ -10,18 +10,19 @@ typedef struct n {
 	struct n *dir;
 } No;
 
-// void rotacaoEE(No *n);
-// void rotacaoDD(No *n);
-// void rotacaoED(No *n);
-// void rotacaoDE(No *n);
-// int maior(int x, int y);
-
 int alturaEsq(No *n);
 int alturaDir(No *n);
 int fatorBalanceamento(No *raiz);
 No* inserir(No *n, int valor);
 void imprimirLinha(No *raiz, int altura) ;
 void buscar(No *n, int valor);
+void rotacaoDir(No* n);
+void rotacaoDirDir(No* n);
+void rotacaoEsqDir(No* n);
+void rotacaoDirEsq(No* n);
+void rotacaoEsq(No* n);
+void rotacaoEsqEsq(No* n);
+
 
 int main() {
 	No *raiz;
@@ -66,6 +67,17 @@ int main() {
 
 				fb = fatorBalanceamento(raiz);
 				printf("Fator de balanceamento: %d\n", fb);
+
+				if(fb < -1) {	//caso o nó seja nulo, avisa e sai
+					printf("ROTACAO DIREITA  %d\n", fb);
+					rotacaoDirDir(raiz);
+				} else if(fb > 1) {
+					rotacaoEsqEsq(raiz);
+
+					printf("ROTAÇAO ESQUERDA  %d\n", fb);
+				} else {
+					printf("Árvore balanceada.  %d\n", fb);
+				}
 				break;
 			case 3:
 				printf("-----BUSCAR-----\n");
@@ -112,6 +124,7 @@ No* inserir(No *raiz, int valor) {
 					aux->esq->dir = NULL;
 					printf("Altura: %d\n", aux->esq->altura);
 					printf("Inserido à esquerda.\n");
+
 					return raiz;
 				}
 			} else if(valor > aux->num) { //direita
@@ -126,6 +139,7 @@ No* inserir(No *raiz, int valor) {
 					aux->dir->dir = NULL;
 					printf("Altura: %d\n", aux->dir->altura);
 					printf("Inserido à direita.\n");
+					
 					return raiz;
 				}
 			} else {
@@ -134,6 +148,7 @@ No* inserir(No *raiz, int valor) {
 			}
 		} while(aux != NULL);
 	}
+
 	return raiz;
 }
 
@@ -188,6 +203,26 @@ int alturaDir(No *n) {
 	return alt;
 }
 
+void buscaDesbalanceamento(No* n) {
+	int fb;
+
+	if(n == NULL) {
+		printf("Nó nulo. \n");
+	} else {
+		fb = fatorBalanceamento(n);
+		if(fb == 0) {
+			printf("Árvore balanceada.\n");
+			return;
+		} else if(fb > 1) {
+			n = n->dir;
+			
+
+		} else if(fb < -1) {
+			n = n->esq;
+		}
+	}
+}
+
 
 int fatorBalanceamento(No *raiz) {
 	int fb = 0;
@@ -195,4 +230,58 @@ int fatorBalanceamento(No *raiz) {
 	fb = alturaDir(raiz->dir) - alturaEsq(raiz->esq);
 
 	return fb;
+}
+
+void rotacaoDir(No* n) {
+	No *tmp, *aux;
+	if(n == NULL) {
+		printf("Nó nulo. \n");
+		return;
+	} else {
+		aux = n->esq;
+		tmp = aux->esq;
+		aux->dir = n;
+		aux->altura = aux->altura -1;
+		n->esq = NULL;
+		n = aux;
+		n->altura = n->altura +1;
+		printf("Balanceado.\n");
+	}
+}
+
+void rotacaoEsq(No* n) {
+	No *tmp, *aux;
+	if(n == NULL) {
+		printf("Nó nulo. \n");
+		return;
+	} else {
+		aux = n->dir;
+		tmp = aux->esq;
+		aux->esq = n;
+		aux->altura = aux->altura +1;
+		n->dir = tmp;
+		n = aux;
+		n->altura = n->altura - 1;
+		printf("Balanceado.\n");
+	}
+}
+
+void rotacaoEsqDir(No *n) {
+	rotacaoEsq(n->esq);
+	rotacaoDir(n);
+}
+
+void rotacaoDirEsq(No *n) {
+	rotacaoDir(n->dir);
+	rotacaoEsq(n);
+}
+
+void rotacaoEsqEsq(No *n) {
+	rotacaoEsq(n->esq);
+	rotacaoEsq(n);
+}
+
+void rotacaoDirDir(No *n) {
+	rotacaoDir(n->dir);
+	rotacaoDir(n);
 }
